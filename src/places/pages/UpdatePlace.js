@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
@@ -39,19 +39,33 @@ const DUMMY_PLACES = [
 ];
 
 const UpdatePlace = () => {
-  const [formState, inputHandler] = useForm(
+  const placeId = useParams().placeId;
+  const [isLoading, setLoading] = useState(true);
+
+  const [formState, inputHandler, setFormData] = useForm(
     {
-      title: { value: identifiedPlace.title, isValid: true },
+      title: { value: "", isValid: false },
       description: {
-        value: identifiedPlace.description,
-        isValid: true,
+        value: "",
+        isValid: false,
       },
     },
-    true
+    false
   );
-
-  const placeId = useParams().placeId;
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
+
+  useEffect(() => {
+    if (identifiedPlace) {
+      setFormData(
+        {
+          title: { value: identifiedPlace.title, isValid: true },
+          description: { value: identifiedPlace.description, isValid: true },
+        },
+        true
+      );
+      setLoading(false);
+    }
+  }, [setFormData, identifiedPlace]);
 
   if (!identifiedPlace) {
     return (
@@ -60,8 +74,20 @@ const UpdatePlace = () => {
       </div>
     );
   }
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2> Loading</h2>
+      </div>
+    );
+  }
+  const placeUpdateSubmitHandler = (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <form className="place-form">
+    <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
       <Input
         id="title"
         element="input"
@@ -85,7 +111,7 @@ const UpdatePlace = () => {
         initialValid={formState.inputs.description.isValid}
       ></Input>
 
-      <Button type="submit" disabled={true}>
+      <Button type="submit" disabled={!formState.isValid}>
         UPDATE PLACE
       </Button>
     </form>

@@ -30,6 +30,7 @@ const NewPlace = (props) => {
   return (
     <form className="place-form" onSubmit={placeSubmitHandler}>
       <Input
+        id="title"
         element="input"
         type="text"
         label="Title"
