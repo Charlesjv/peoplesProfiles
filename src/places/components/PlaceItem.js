@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./PlaceItem.css";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
+import Modal from "../../shared/components/UIElements/Modal";
 
 const PlaceItem = (props) => {
   const [showConfirmModel, setShowConfirmModel] = useState(false);
@@ -11,6 +12,10 @@ const PlaceItem = (props) => {
 
   const cancelDeleteHandler = () => {
     setShowConfirmModel(false);
+  };
+
+  const deletePressed = () => {
+    console.log("deletePressed");
   };
 
   const confirmDeleteHandler = () => {
@@ -51,7 +56,9 @@ const PlaceItem = (props) => {
           <div className="place-item__actions">
             <Button inverse>VIEW ON MAP</Button>
             <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger>DELETE</Button>
+            <Button danger show={deletePressed}>
+              DELETE
+            </Button>
           </div>
         </Card>
       </li>
