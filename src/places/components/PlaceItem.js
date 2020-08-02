@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./PlaceItem.css";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 
+import { AuthContext } from "../../shared/components/context/auth-context";
 const PlaceItem = (props) => {
+  const auth = useContext(AuthContext);
   const [showConfirmModel, setShowConfirmModel] = useState(false);
   const showDeleteWarningHandler = () => {
     setShowConfirmModel(true);
@@ -55,10 +57,19 @@ const PlaceItem = (props) => {
           </div>
           <div className="place-item__actions">
             <Button inverse>VIEW ON MAP</Button>
-            <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger show={deletePressed}>
-              DELETE
-            </Button>
+            {auth.isLoggedIn && (
+              <Button to={`/places/${props.id}`}>EDIT</Button>
+            )}
+            {auth.isLoggedIn && (
+              <Button danger show={deletePressed}>
+                DELETE
+              </Button>
+            )}
+            {auth.isLoggedIn && (
+              <li>
+                <button onClick={auth.logout}> LOGOUT</button>
+              </li>
+            )}
           </div>
         </Card>
       </li>
